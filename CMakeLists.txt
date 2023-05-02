@@ -17,9 +17,7 @@ set(MAIN_LIBRARIES_DIR
 )
 
 set(MAIN_LIBRARIES 
-strfmt
-statsi
-terminalcancer
+
 )
 
 set(LIBRARY_HEADERS_DIR
@@ -43,10 +41,15 @@ project(${LIBRARY_NAME})
 
 
 
+
+if (TARGET ${LIBRARY_NAME})
+  # Do something when target found
+else()
 add_library(${LIBRARY_NAME} STATIC
     ${LIBRARY_HEADERS}
     ${LIBRARY_SOURCE}
 )
+endif()
 
 
 #########
@@ -84,24 +87,25 @@ enable_testing()
 
 
 # Adding test files to target
+
+
+if (TARGET ${TESTS_NAME})
+  # Do something when target found
+else()
 add_executable(
     ${TESTS_NAME}
     ${TESTS_SOURCES}
 )
-
 # Linking target with GTest
 target_link_libraries(
     ${TESTS_NAME}
     GTest::gtest_main
     ${LIBRARY_NAME}
 )
-
 # Final steps
 include(GoogleTest)
 gtest_discover_tests(${TESTS_NAME})
-
-
-
+endif()
 
 
 ################
@@ -109,12 +113,14 @@ gtest_discover_tests(${TESTS_NAME})
 ################
 
 # Git submodules
+message("")
+message("Finding and downloading submodules for library `${LIBRARY_NAME}`")
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS ${PROJECT_SOURCE_DIR}/.git)
 	# Update submodules as needed
 	option(GIT_SUBMODULE "Check submodules during build" ON)
 	if (GIT_SUBMODULE)
-		message(STATUS Submodule update)
+		message(STATUS "Submodules updating")
 		execute_process(COMMAND ${GIT_EXECUTABLE} submodule update --init --recursive
 			WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 		    RESULT_VARIABLE GIT_SUBMOD_RESULT)
@@ -128,7 +134,10 @@ endif()
 foreach(LIBRARY ${MAIN_LIBRARIES})
 if (NOT EXISTS "${PROJECT_SOURCE_DIR}/libs/${LIBRARY}/CMakeLists.txt")
 	message(FATAL_ERROR "The ${LIBRARY} submodule was not downloaded! GIT_SUBMODULE was turned off or failed. Please update submodules and try again.")
+else()
+    message (STATUS "Submodule ${LIBRARY} was downloaded and has been found.")
 endif()
+message("")
 endforeach(LIBRARY)
 
 
