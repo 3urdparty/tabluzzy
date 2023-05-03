@@ -17,7 +17,9 @@ set(MAIN_LIBRARIES_DIR
 )
 
 set(MAIN_LIBRARIES 
-
+    statsi
+    strfmt
+    terminalcancer
 )
 
 set(LIBRARY_HEADERS_DIR
