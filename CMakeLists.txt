@@ -32,7 +32,8 @@ set(LIBRARY_SOURCE_DIR
     src
 )
 set(LIBRARY_SOURCE
-    ${LIBRARY_SOURCE_DIR}/tabluzzy.cpp
+    ${LIBRARY_SOURCE_DIR}/tables.cpp
+    ${LIBRARY_SOURCE_DIR}/columns.cpp
 )
 
 
