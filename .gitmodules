@@ -1,9 +1,12 @@
 [submodule "libs/statsi"]
 	path = libs/statsi
 	url = https://github.com/3urdparty/statsi
+	branch = main
 [submodule "libs/strfmt"]
 	path = libs/strfmt
 	url = https://github.com/3urdparty/strfmt
+	branch = main
 [submodule "libs/terminalcancer"]
 	path = libs/terminalcancer
 	url = https://github.com/3urdparty/terminalcancer
+	branch = main
