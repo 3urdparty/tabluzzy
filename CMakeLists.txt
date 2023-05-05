@@ -33,7 +33,7 @@ set(LIBRARY_SOURCE_DIR
 )
 set(LIBRARY_SOURCE
     ${LIBRARY_SOURCE_DIR}/tables.cpp
-    ${LIBRARY_SOURCE_DIR}/columns`.cpp
+    ${LIBRARY_SOURCE_DIR}/columns.cpp
 )
 
 
