@@ -69,29 +69,29 @@ void Column::setIndex(unsigned int i) { index = i; };
 ValueType Column::getValueType() { return type; };
 
 float Column::getMinimumValue() {
-  vector<float> rawValues = convertStrToFloats(rows);
+  vector<float> rawValues = convertToFloats(rows);
   return getMin(rawValues);
 };
 
 float Column::getMaximumValue() {
-  vector<float> rawValues = convertStrToFloats(rows);
+  vector<float> rawValues = convertToFloats(rows);
   return getMax(rawValues);
 };
 
 float Column::getMedian() {
-  vector<float> values = convertStrToFloats(rows);
+  vector<float> values = convertToFloats(rows);
   return calculateMedian(values);
 };
 float Column::getMean() {
-  vector<float> values = convertStrToFloats(rows);
+  vector<float> values = convertToFloats(rows);
   return calculateMean(values);
 };
 float Column::getVariance() {
-  vector<float> values = convertStrToFloats(rows);
+  vector<float> values = convertToFloats(rows);
   return calculateVariance(values);
 };
 float Column::getStdDeviation() {
-  vector<float> values = convertStrToFloats(rows);
+  vector<float> values = convertToFloats(rows);
   return calculateStandardDeviation(values);
 };
 
@@ -105,7 +105,7 @@ vector<string> Column::getAllValues() {
 
 tuple<float, float> Column::getRegression() {
   vector<string> rawValues = getAllValues();
-  vector<float> values = convertStrToFloats(rawValues);
+  vector<float> values = convertToFloats(rawValues);
   return calculateRegression(values);
 };
 

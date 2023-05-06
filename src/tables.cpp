@@ -271,22 +271,22 @@ vector<string> Table::getAllValues() {
 
 float Table::getMedian() {
   vector<string> rawValues = getAllValues();
-  vector<float> values = convertStrToFloats(rawValues);
+  vector<float> values = convertToFloats(rawValues);
   return calculateMedian(values);
 };
 float Table::getMean() {
   vector<string> rawValues = getAllValues();
-  vector<float> values = convertStrToFloats(rawValues);
+  vector<float> values = convertToFloats(rawValues);
   return calculateMean(values);
 };
 float Table::getVariance() {
   vector<string> rawValues = getAllValues();
-  vector<float> values = convertStrToFloats(rawValues);
+  vector<float> values = convertToFloats(rawValues);
   return calculateVariance(values);
 };
 float Table::getStdDeviation() {
   vector<string> rawValues = getAllValues();
-  vector<float> values = convertStrToFloats(rawValues);
+  vector<float> values = convertToFloats(rawValues);
   return calculateStandardDeviation(values);
 };
 void Table::displayReport() {
@@ -358,7 +358,7 @@ void Table::replaceEveryInstanceInColumn(string& colHeader,
 void Table::sortTableByColumn(string& colHeader) {
   Column col = getColumnByHeader(colHeader);
   vector<string> rawValues = col.getAllValues();
-  vector<float> values = convertStrToFloats(rawValues);
+  vector<float> values = convertToFloats(rawValues);
 
   bool swapped;
   int n = values.size();
