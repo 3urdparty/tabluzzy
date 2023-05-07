@@ -18,15 +18,15 @@ class Column {
   string& operator[](size_t rowNo);
   string operator[](const size_t rowNo) const;
 
-  string getValueAt(unsigned int rowNo);  // gets value at row number 'rowNo'
-  void setValueAt(unsigned int rowNo,
+  string getValueAt(size_t rowNo);  // gets value at row number 'rowNo'
+  void setValueAt(size_t rowNo,
                   string value);  // sets the value of row at 'rowNo' to float
                                   // value of 'value'
 
   void setHeader(string header);
   string getHeader();
   vector<int> getPrimes();
-  void setIndex(unsigned int i);
+  void setIndex(size_t i);
   int getIndex();
 
   void setValueType(ValueType);
@@ -43,8 +43,8 @@ class Column {
   float getStdDeviation();
   tuple<float, float> getRegression();
   vector<string> getAllValues();
-  void deleteRow(int rowIndex);
-  void insertAtRowIndex(int rowIndex, string value);
+  void deleteRow(size_t rowIndex);
+  void insertAtRowIndex(size_t rowIndex, string value);
 
  private:
   int index;
@@ -74,8 +74,8 @@ class Table {
 
   Column& getColumnByHeader(string i);
 
-  string getValueAt(string header, unsigned int rowNo);
-  string getValueAt(int colIndex, unsigned int rowNo);
+  string getValueAt(string header, size_t rowNo);
+  string getValueAt(int colIndex, size_t rowNo);
 
   vector<string> getAllColumnHeaders();
 
@@ -101,18 +101,18 @@ class Table {
 
   void sortColumnsByColumn(string& colHeader);
 
-  void deleteRow(int& rowNo);
+  void deleteRow(size_t rowNo);
   void deleteColumn(string& colHeader);
-  void insertRowAtIndex(vector<string>& rawValues, int rowIndex);
+  void insertRowAtIndex(vector<string>& rawValues, size_t rowIndex);
   void replaceEveryInstance(string& valToBeReplaced, string& valToReplace);
   void replaceEveryInstanceInColumn(string& colHeader, string& valToBeReplaced,
                                     string& valToReplace);
   vector<string> to_html();
   void sortTableByColumn(string& colHeader);
-  void swapTablRows(int rowIndex1, int rowIndex2);
-  vector<string> getAllValuesInRow(int rowNo);
+  void swapTablRows(size_t rowIndex1, size_t rowIndex2);
+  vector<string> getAllValuesInRow(size_t rowNo);
   int getRowIndexOfFirstOccurrence(string& colHeader, string value);
-  int getRowIndexOfFirstOccurrence(string& colHeader, int value);
+  int getRowIndexOfFirstOccurrence(string& colHeader, size_t value);
   void flushTable();
 };
 
