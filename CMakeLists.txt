@@ -2,6 +2,8 @@
 ###########
 # Library #
 ###########
+# Options
+option(TESTS "Enable tests" OFF)
 
 cmake_minimum_required(VERSION 3.26.0)
 set (CMAKE_CXX_STANDARD 17)
@@ -77,38 +79,44 @@ set(TESTS_SOURCES
 
 
 # Setting up GTest
-include(FetchContent)
+# If TESTS option is ON
+if(TESTS)
+# Setting up GTest
+    message("Enabling tests for target")
+    message(STATUS  "Fetching GoogleTests")
+    include(FetchContent)
+    FetchContent_Declare(
+        googletest
+        URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip)
+    FetchContent_MakeAvailable(googletest)
+    enable_testing()
+    message(STATUS "Enabling GoogleTest")
+    
+    # Adding test files to target
+    message(STATUS "Adding test files to target")
+    
+    # Check if target already added to project
+    if (TARGET ${TESTS_NAME})
+    else()
+        add_executable(
+        ${TESTS_NAME}
+        ${TESTS_SOURCES})
+        
+        # Linking target with GTest
+        message(STATUS "Linking library with tests and GoogleTest")
+        target_link_libraries(
+            ${TESTS_NAME}
+            GTest::gtest_main
+            ${LIBRARY_NAME})
+        # Final steps
+        message(STATUS "Including GoogleTest")
+        include(GoogleTest)
 
-FetchContent_Declare(
-  googletest
-  URL https://github.com/google/googletest/archive/03597a01ee50ed33e9dfd640b249b4be3799d395.zip
-)
-
-FetchContent_MakeAvailable(googletest)
-
-enable_testing()
-
-
-# Adding test files to target
-
-
-if (TARGET ${TESTS_NAME})
-  # Do something when target found
-else()
-add_executable(
-    ${TESTS_NAME}
-    ${TESTS_SOURCES}
-)
-# Linking target with GTest
-target_link_libraries(
-    ${TESTS_NAME}
-    GTest::gtest_main
-    ${LIBRARY_NAME}
-)
-# Final steps
-include(GoogleTest)
-gtest_discover_tests(${TESTS_NAME})
+        gtest_discover_tests(${TESTS_NAME})
+        message("")
+    endif()
 endif()
+
 
 
 ################

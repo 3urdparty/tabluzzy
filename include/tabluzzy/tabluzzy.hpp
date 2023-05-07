@@ -284,6 +284,10 @@ class Table {
   /// @return the index of the first element
   int getRowIndexOfFirstOccurrence(string& colHeader, size_t value);
 
+  /// @brief delets the row at index rowIndex
+  /// @param rowIndex the index of the row to be deleted
+  void deleteRow(size_t rowIndex);
+
   /// @brief flushes all the previous values of the table
   void flushTable();
 };

@@ -22,12 +22,6 @@ Table::Table(size_t col, size_t row) {
 // destructor class for table
 Table::~Table(){};
 
-string Table::getValueAt(size_t colIndex, size_t rowNo) {
-  // gets the column at colIndex
-  Column col = operator[](colIndex);
-  // gets the value at row number in the column and returns it
-  return col[rowNo];
-};
 
 string Table::getValueAt(string header, size_t rowNo) {
   // gets the column by column header
@@ -47,7 +41,7 @@ void Table::addColumn(string header, ValueType dttype) {
   data.push_back(newCol);
 };
 
-void Table::deleteRow(size_t& rowIndex) {
+void Table::deleteRow(size_t rowIndex) {
   // for every column in columns
   for (size_t i = 0; i < columns; i++) {
     // we get a reference to the column
