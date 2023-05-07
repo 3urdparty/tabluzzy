@@ -470,8 +470,14 @@ void Table::deleteColumn(string& colHeader) {
   int index = col.getIndex();
   // removes the column from the table
   data.erase(data.begin() + index, data.begin() + index + 1);
+
+  int cols = data.size();
+  columns = cols;
+
+  for(int x = 0; x < columns; x ++){
+    operator[](x).setIndex(x);
+  }
   // decrements columns by 1
-  columns--;
 };
 
 bool Table::canBeInsertedIntoTable(vector<string> values) {
