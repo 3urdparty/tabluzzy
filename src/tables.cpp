@@ -191,133 +191,201 @@ void Table::from_csv(vector<vector<string>>& csv) {
 };
 
 vector<string> Table::to_csv() {
-  //
+  // declare a variable that holds the lines of csv to be outputted
   vector<string> csv;
+
+  // we convert the number of columns to strings
   string c = to_string(columns);
+  // we convert the number of rows to strings
   string r = to_string(rows);
 
+  // we add a line for the number of columns and a line for the number of rows
   csv.push_back(c);
   csv.push_back(r);
 
+  // we get all the column headers from the table
   vector<string> headers = getAllColumnHeaders();
+  // we join them using ',' as a delimtered
   string entry = join(headers, ",");
+  // we add that line to the list of csv liens
   csv.push_back(entry);
+
+  // we reset the entry variable
   entry = "";
 
+  // we create a vector to store the string representation of the data types of
+  // each column
   vector<string> datatypes;
+
+  // for every column in columns
   for (int x = 0; x < columns; x++) {
+    // we get the string representation of the data type of the column
+    // using a ternary operator for brevity
     string dttype =
         (data[x].getValueType() == ValueType::flt) ? "number" : "string";
+    // we add the representation to datatypes
     datatypes.push_back(dttype);
   }
+  // we join the datatype representations using ',' as a delimiter
   entry = join(datatypes, ",");
+
+  // we add that line to csv
   csv.push_back(entry);
 
+  // then declare a vector for values
   vector<string> values;
+  // for every row in rows
   for (int y = 0; y < rows; y++) {
+    // for every column in columns
     for (int x = 0; x < columns; x++) {
-      values.push_back(data[x].getValueAt(y));
+      // we add the value at row y at column x
+      values.push_back(data[x][y]);
     }
+    // we join the values using ','
     entry = join(values, ",");
+    // we add that line to entries
     csv.push_back(entry);
   };
   return csv;
 }
 
 vector<string> Table::to_html() {
+  // declare a variable to store the html tags
   vector<string> tags;
 
-  tags.push_back(R"(<!DOCTYPE html>)");
-  tags.push_back(R"(<html>)");
+  // we generate the first static part of the html
+  tags.push_back(R"(
+  <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Table</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+      <link rel="stylesheet" href="css/style.css">
+    </head>
+    <body>
+      <section>
+        <h1>Table</h1>
+        <div class="tbl-header">
+        <table cellpadding="0" cellspacing="0" border="0">
+          <thead>
+            <tr>)");
 
-  tags.push_back(R"(<head>)");
-  tags.push_back(R"(  <meta charset="UTF-8">)");
-
-  tags.push_back(R"(  <title>Table</title>)");
-  tags.push_back(
-      R"(  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">)");
-  tags.push_back(R"(  <link rel="stylesheet" href="css/style.css">)");
-  tags.push_back(R"(</head>)");
-
-  tags.push_back(R"(<body>)");
-  tags.push_back(R"(  <section>)");
-  tags.push_back(R"(    <h1>Table</h1>)");
-  tags.push_back(R"(    <div class="tbl-header">)");
-  tags.push_back(R"(      <table cellpadding="0" cellspacing="0" border="0">)");
-  tags.push_back(R"(        <thead>)");
-  tags.push_back(R"(          <tr>)");
-
+  // declare a variable that holds the tag
   string tag;
+
+  // for every column in columns
   for (int x = 0; x < columns; x++) {
+    // we get the header of that column
     string header = operator[](x).getHeader();
+    // we enclose it in table header tags
     tag = "<th>" + header + "</th>";
+    // we add it to tags
     tags.push_back(tag);
   };
 
-  tags.push_back(R"(          </tr>)");
-  tags.push_back(R"(        </thead>)");
-  tags.push_back(R"(      </table>)");
-  tags.push_back(R"(    </div>)");
-  tags.push_back(R"(    <div class="tbl-content">)");
-  tags.push_back(R"(      <table cellpadding="0" cellspacing="0" border="0">)");
-  tags.push_back(R"(        <tbody>)");
+  tags.push_back(R"(
+          </tr>
+        </thead>
+      </table>
+      </div>
+      <div class="tbl-content">
+      <table cellpadding="0" cellspacing="0" border="0">
+    <tbody>)");
 
+  // for every row in rows
   for (int y = 0; y < rows; y++) {
-    tags.push_back(R"(        <tr>)");
+    // create a table row in the output html
+    tags.push_back(R"(<tr>)");
+    // for every column in columns
     for (int x = 0; x < columns; x++) {
+      // gets the value from the table at column x and row y
       string value = operator[](x).getValueAt(y);
+      // we enclose the value in html tags
       tag = "<td>" + value + "</td>";
+      // we add that tag to the list of tags
       tags.push_back(tag);
     }
-    tags.push_back(R"(        </tr>)");
+    // ending the table row
+    tags.push_back(R"(</tr>)");
   };
 
-  tags.push_back(R"(        </tbody>)");
-  tags.push_back(R"(      </table>)");
-  tags.push_back(R"(    </div>)");
-  tags.push_back(R"(  </section>)");
-  tags.push_back(R"(  <script src="js/index.js"></script>)");
-  tags.push_back(R"(</body>)");
-  tags.push_back(R"(</html>)");
+  tags.push_back(R"(</tbody>)
+   </table>)");
+  tags.push_back(R"(
+    </div>
+    </section>
+   <script src="js/index.js"></script>
+   </body>
+   </html>)");
+  // return the list of tags to be outputted to a file
   return tags;
 };
 
 vector<string> Table::getAllColumnHeaders() {
+  // declares a vector of strings to store the headers
   vector<string> headers;
+  // for every column in columns
   for (int x = 0; x <= columns; x++) {
+    // get the header of the colummn
     string header = operator[](x).getHeader();
+    // add it to the list of headers
     headers.push_back(header);
   }
+
+  // return the list of headers
   return headers;
 };
 
 float Table::getMinimumValue() {
+  // declare a list of float values
   vector<float> values;
+
+  // for every column in columns
   for (int x = 0; x < columns; x++) {
+    // get the column
     Column col = operator[](x);
+    // if the column is of type string then skip that column
     if (col.getValueType() == ValueType::str) continue;
+    // however if it is of type integer then get the minimum value
     values.push_back(col.getMinimumValue());
   }
+
+  // get the minumum of the values and return it
   return getMin(values);
 };
 
 float Table::getMaxiumValue() {
+  // declare a list of float values
   vector<float> values;
+  // for every column in columnss
   for (int x = 0; x < columns; x++) {
+    // get the column
     Column col = operator[](x);
+    // if the column is of type string then skip that column
     if (col.getValueType() == ValueType::str) continue;
+    // however if it is of type integer then get the minimum value
     values.push_back(col.getMaximumValue());
   }
+
+  // get the minumum of the values and return it
   return getMax(values);
 };
 
 vector<string> Table::getAllValues() {
+  // delare a list of strings
   vector<string> rawValues;
+  // for every column in columns
   for (int x = 0; x < columns; x++) {
+    // get the column
     Column col = operator[](x);
+    // if the column is of type string then skip that column
     if (col.getValueType() == ValueType::str) continue;
+    // if the column is of type float get the values in the column
     vector<string> rawColValues = col.getAllValues();
+    // for every value in rawValues
     for (string rawValue : rawColValues) {
+      // add it to the list of values
       rawValues.push_back(rawValue);
     }
   };
@@ -325,29 +393,47 @@ vector<string> Table::getAllValues() {
 }
 
 float Table::getMedian() {
+  // get all the values in the table
   vector<string> rawValues = getAllValues();
+  // convert every value to float
   vector<float> values = convertToFloats(rawValues);
+  // calculate the median and return it
   return calculateMedian(values);
 };
 float Table::getMean() {
+  // get all the values in the table
   vector<string> rawValues = getAllValues();
+  // convert every value to float
   vector<float> values = convertToFloats(rawValues);
+  // calculate the mean and return it
   return calculateMean(values);
 };
 float Table::getVariance() {
+  // get all the values if the table
   vector<string> rawValues = getAllValues();
+  // convert the values to floats
   vector<float> values = convertToFloats(rawValues);
+  // calculate the variance and return it
   return calculateVariance(values);
 };
 float Table::getStdDeviation() {
+  // get all the values in the table
   vector<string> rawValues = getAllValues();
+  // convert the values to floats
   vector<float> values = convertToFloats(rawValues);
+  // calculate the standard deviation and return it
   return calculateStandardDeviation(values);
 };
+
 void Table::displayReport() {
+  // for every column in columns
   for (int x = 0; x < columns; x++) {
+    // get the column
     Column col = operator[](x);
+    // if the column is of type string then skip that column
     if (col.getValueType() == ValueType::str) continue;
+    // if it contains numerical values then calculate all the statistics of the
+    // table
     float min = col.getMinimumValue();
     float max = col.getMaximumValue();
     float median = col.getMedian();
@@ -356,6 +442,7 @@ void Table::displayReport() {
     float stdv = col.getStdDeviation();
     auto [a, b] = col.getRegression();
 
+    // and output them
     cout << "Column " << colorfmt(fg::cyan) << col.getHeader() << clearfmt
          << ":" << endl
          << setw(15) << setfill('-') << "" << endl
@@ -373,65 +460,93 @@ void Table::displayReport() {
   cout << endl;
 };
 
-int Table::getNumberOfRows() { return rows; };
-int Table::getNumberOfColumns() { return columns; };
-void Table::displayVerticalHistogram(){
-
+int Table::getNumberOfRows() {
+  // returns the number of rows in the table
+  return rows;
 };
-void Table::displayHorizontalHistogram() {}
+int Table::getNumberOfColumns() {
+  // returns the number of columns in the table
+  return columns;
+};
 
-void Table::deleteColumn(string& colHeader){
-
+void Table::deleteColumn(string& colHeader) {
+  // gets the column by its header
+  Column col = getColumnByHeader(colHeader);
+  // gets the index from the column
+  int index = col.getIndex();
+  // removes the column from the table
+  data.erase(data.begin() + index, data.begin() + index + 1);
+  // decrements columns by 1
+  columns--;
 };
 
 bool Table::canBeInsertedIntoTable(vector<string> values) {
+  // for every column in columns
   for (int i = 0; i < columns; i++) {
+    // if the column has type float
     if (operator[](i).getValueType() == ValueType::flt) {
+      // if the value for that column cannot be converted to type float
       if (!stringIsFloat(values[i])) {
+        // then return false
         return false;
       }
     }
   };
+  // return false
   return true;
 };
 
 void Table::insertRowAtIndex(vector<string>& rawValues, size_t rowIndex) {
+  // for every column in columns
   for (size_t i = 0; i < columns; i++) {
+    // get the reference to the column
     Column& col = operator[](i);
+    // insert a value into column at index rowIndex
     col.insertAtRowIndex(rowIndex, rawValues[i]);
   };
+  // increment the number of rows by 1
   rows += 1;
 };
-void Table::replaceEveryInstance(string& valToBeReplaced, string& valToReplace){
 
-};
-void Table::replaceEveryInstanceInColumn(string& colHeader,
-                                         string& valToBeReplaced,
-                                         string& valToReplace){
-
-};
 void Table::sortTableByColumn(string& colHeader) {
+  // get the column by its header
   Column col = getColumnByHeader(colHeader);
+  // get all the values in that column
   vector<string> rawValues = col.getAllValues();
+  // convert all those values to floats
   vector<float> values = convertToFloats(rawValues);
 
+  // using bubble sort, sort the table
+  // variable to check if a swap was made in the last pass
   bool swapped;
+  // getting the number of values
   int n = values.size();
+  // for every element in the list
   for (int i = 0; i < n - 1; i++) {
+    // for every element that not peen pushed to the end
     for (int j = 0; j < n - i - 1; j++) {
+      // if the first element is bigger than the second element
       if (values[j] > values[j + 1]) {
+        // swap the values using std::swap
         swap(values[j], values[j + 1]);
+        // swapTableRows() to apply that swap to every row in the table
         swapTablRows(j, j + 1);
+        // setting swapped to true
         swapped = true;
       }
     }
+    // the there was no swap in the last pass then break the loop prematurely
+    // for the list is sorted
     if (!swapped) break;
   };
 };
 
 void Table::swapTablRows(size_t rowIndex1, size_t rowIndex2) {
+  // for every element in columns
   for (int x = 0; x < columns; x++) {
+    // we get the reference to the column
     Column& col = operator[](x);
+    // we swap the values at rowIndex1 and rowIndex2
     string tmp1 = col.getValueAt(rowIndex1);
     string tmp2 = col.getValueAt(rowIndex2);
     col.setValueAt(rowIndex1, tmp2);
@@ -441,37 +556,56 @@ void Table::swapTablRows(size_t rowIndex1, size_t rowIndex2) {
 
 vector<string> Table::getAllValuesInRow(size_t rowNo) {
   vector<string> rawValues;
+  // for every column in columns
   for (int x = 0; x < columns; x++) {
+    // we get the value at row index rowNo
     string val = operator[](x).getValueAt(rowNo);
+    // we add that value to rawValues
     rawValues.push_back(val);
   };
   return rawValues;
 };
 int Table::getRowIndexOfFirstOccurrence(string& colHeader, string value) {
+  // we get the column by its header
   Column col = getColumnByHeader(colHeader);
+  // we get all the values in that column
   vector<string> rawValues = col.getAllValues();
+  // for every value in rawValues
   for (int i = 0; i < rawValues.size(); i++) {
+    // we compare the string to the string value
     if (cmpstr(rawValues[i], value)) {
+      // if they are the same we return the index
       return i;
     }
   }
+  // else we return -1, signifying there are no matches
   return -1;
 };
 
 int Table::getRowIndexOfFirstOccurrence(string& colHeader, size_t value) {
+  // we get the column by its header
   Column col = getColumnByHeader(colHeader);
+  // we get all the values in that column
   vector<string> rawValues = col.getAllValues();
+  // for every value in rawValues
   for (int i = 0; i < rawValues.size(); i++) {
+    // we check if the value at that row index is the same as the value passed
+    // in
     float colVal = stoi(rawValues[i]);
+    // if they are the same
     if (colVal == value) {
+      // we return the index of that element
       return i;
     }
   }
+  // else we return -1 to signify no matches were found
   return -1;
 };
 
 void Table::flushTable() {
+  // used to clear the table from its previos values
   data.clear();
+  // sets the table dimensions to 0
   columns = 0;
   rows = 0;
 };

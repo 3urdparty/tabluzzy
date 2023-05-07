@@ -8,7 +8,6 @@
 using namespace std;
 // Namespace for use in this application
 
-
 enum ValueType { str = 0, flt = 1 };
 
 class Column {
@@ -95,8 +94,7 @@ class Table {
   void displayReport();
   int getNumberOfRows();
   int getNumberOfColumns();
-  void displayVerticalHistogram();
-  void displayHorizontalHistogram();
+
   bool canBeInsertedIntoTable(vector<string> values);
 
   void sortColumnsByColumn(string& colHeader);
@@ -104,9 +102,6 @@ class Table {
   void deleteRow(size_t rowNo);
   void deleteColumn(string& colHeader);
   void insertRowAtIndex(vector<string>& rawValues, size_t rowIndex);
-  void replaceEveryInstance(string& valToBeReplaced, string& valToReplace);
-  void replaceEveryInstanceInColumn(string& colHeader, string& valToBeReplaced,
-                                    string& valToReplace);
   vector<string> to_html();
   void sortTableByColumn(string& colHeader);
   void swapTablRows(size_t rowIndex1, size_t rowIndex2);
