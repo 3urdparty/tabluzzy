@@ -47,7 +47,7 @@ void Table::addColumn(string header, ValueType dttype) {
   data.push_back(newCol);
 };
 
-void Table::deleteRow(int& rowIndex) {
+void Table::deleteRow(size_t& rowIndex) {
   // for every column in columns
   for (size_t i = 0; i < columns; i++) {
     // we get a reference to the column
