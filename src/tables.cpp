@@ -22,7 +22,6 @@ Table::Table(size_t col, size_t row) {
 // destructor class for table
 Table::~Table(){};
 
-
 string Table::getValueAt(string header, size_t rowNo) {
   // gets the column by column header
   Column col = getColumnByHeader(header);
@@ -94,52 +93,58 @@ Column& Table::getColumnByHeader(string header) {
 };
 
 void Table::displayTable() const {
-  // gets the terminal dimension
-  auto [w, h] = getTerminalDimensions();
+  if (columns == 0) {
+    cout << "Table is empty" << endl;
+  } else if (columns == 1) {
+    operator[](0).displayColumn();
+  } else {
+    // gets the terminal dimension
+    auto [w, h] = getTerminalDimensions();
 
-  cout << endl;
-  // draws a line
-  cout << "+" << setfill('=') << setw(16 * columns - 1) << "" << setw(1)
-       << setfill(' ') << "+" << endl;
-
-  cout << "|";
-
-  // for every column in the table
-  for (int x = 0; x < columns; x++) {
-    // we get the column
-    Column col = operator[](x);
-    // we output the header
-    cout << bold << colorfmt(fg::green) << col.getHeader() << left << setw(8)
-         << "\t"
-         << "\t" << clearfmt;
-  };
-  cout << "|" << endl;
-  // for every row in rows
-  for (int y = 0; y < rows; y++) {
-    cout << "|";
-    // for every column in column
-    for (int x = 0; x < columns; x++) {
-      // we get column at index x
-      Column col = operator[](x);
-      // if the column is of type float
-      if (col.getValueType() == ValueType::flt) {
-        // we set the precision to 0 and output it
-        cout << setw(8) << setfill(' ') << setprecision(0) << left << fixed
-             << stof(col.getValueAt(y)) << "\t"
-             << "|";
-
-        // however, if the column is of type string
-      } else if (col.getValueType() == ValueType::str) {
-        // we output it
-        cout << setw(8) << setfill(' ') << col.getValueAt(y) << "\t"
-             << "|";
-      }
-    }
     cout << endl;
-  };
-  // we draw a line
-  cout << "+" << setfill('=') << setw(16 * columns - 1) << "" << setw(1)
-       << setfill(' ') << "+" << endl;
+    // draws a line
+    cout << "+" << setfill('=') << setw(16 * columns - 1) << "" << setw(1)
+         << setfill(' ') << "+" << endl;
+
+    cout << "|";
+
+    // for every column in the table
+    for (int x = 0; x < columns; x++) {
+      // we get the column
+      Column col = operator[](x);
+      // we output the header
+      cout << bold << colorfmt(fg::green) << col.getHeader() << left << setw(8)
+           << "\t"
+           << "\t" << clearfmt;
+    };
+    cout << "|" << endl;
+    // for every row in rows
+    for (int y = 0; y < rows; y++) {
+      cout << "|";
+      // for every column in column
+      for (int x = 0; x < columns; x++) {
+        // we get column at index x
+        Column col = operator[](x);
+        // if the column is of type float
+        if (col.getValueType() == ValueType::flt) {
+          // we set the precision to 0 and output it
+          cout << setw(8) << setfill(' ') << setprecision(0) << left << fixed
+               << stof(col.getValueAt(y)) << "\t"
+               << "|";
+
+          // however, if the column is of type string
+        } else if (col.getValueType() == ValueType::str) {
+          // we output it
+          cout << setw(8) << setfill(' ') << col.getValueAt(y) << "\t"
+               << "|";
+        }
+      }
+      cout << endl;
+    };
+    // we draw a line
+    cout << "+" << setfill('=') << setw(16 * columns - 1) << "" << setw(1)
+         << setfill(' ') << "+" << endl;
+  }
 };
 
 void Table::from_csv(vector<vector<string>>& csv) {
@@ -474,7 +479,7 @@ void Table::deleteColumn(string& colHeader) {
   int cols = data.size();
   columns = cols;
 
-  for(int x = 0; x < columns; x ++){
+  for (int x = 0; x < columns; x++) {
     operator[](x).setIndex(x);
   }
   // decrements columns by 1
